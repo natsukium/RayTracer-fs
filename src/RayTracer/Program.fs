@@ -28,6 +28,17 @@ let lowerLeftCorner =
     - vertical / 2.0
     - Vec3.init 0.0 0.0 focalLength
 
+let render (w, h) =
+    let u = float w / float (ImageWidth - 1)
+    let v = float h / float (ImageHeight - 1)
+
+    Ray.init
+        origin
+        (lowerLeftCorner + u * horizontal + v * vertical
+         - origin)
+    |> rayColor
+    |> Color.writeColor
+
 [<EntryPoint>]
 let main _ =
     sprintf "P3\n%d %d\n255" ImageWidth ImageHeight
@@ -42,15 +53,7 @@ let main _ =
             if count % ImageWidth = 0 then
                 eprintf "\rScanlines remaining: %d" (ImageHeight - 1 - (count / ImageWidth))
 
-            let u = float i / float (ImageWidth - 1)
-            let v = float j / float (ImageHeight - 1)
-
-            Ray.init
-                origin
-                (lowerLeftCorner + u * horizontal + v * vertical
-                 - origin)
-            |> rayColor
-            |> Color.writeColor)
+            render (i, j))
     |> String.concat ""
     |> printfn "%s"
 
