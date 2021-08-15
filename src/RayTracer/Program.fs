@@ -1,11 +1,26 @@
 open RayTracer
 
-let rayColor ray : Color =
-    let unitDirection = Vec3.unit ray.Direction
-    let t = 0.5 * unitDirection.Y + 1.0
+let hitSphere center radius ray =
+    let oc = ray.Origin - center
+    let a = Vec3.dot ray.Direction ray.Direction
+    let b = 2.0 * Vec3.dot oc ray.Direction
+    let c = Vec3.dot oc oc - radius ** 2.0
+    let discriminant = b ** 2.0 - 4.0 * a * c
 
-    (1.0 - t) * Color.init 1.0 1.0 1.0
-    + t * Color.init 0.5 0.7 1.0
+    if discriminant > 0.0 then
+        Some(Color.init 1.0 0.0 0.0)
+    else
+        None
+
+let rayColor ray : Color =
+    match hitSphere (Vec3.init 0.0 0.0 -1.0) 0.5 ray with
+    | Some c -> c
+    | None ->
+        let unitDirection = Vec3.unit ray.Direction
+        let t = 0.5 * unitDirection.Y + 1.0
+
+        (1.0 - t) * Color.init 1.0 1.0 1.0
+        + t * Color.init 0.5 0.7 1.0
 
 let aspectRatio = 16.0 / 9.0
 
