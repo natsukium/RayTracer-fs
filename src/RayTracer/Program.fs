@@ -1,3 +1,5 @@
+open RayTracer
+
 [<Literal>]
 let ImageWidth = 256
 
@@ -16,13 +18,8 @@ seq {
         if count % ImageWidth = 0 then
             eprintf "\rScanlines remaining: %d" (ImageHeight - 1 - (count / ImageWidth))
 
-        let r = float i / float (ImageWidth - 1)
-        let g = float j / float (ImageHeight - 1)
-        let b = 0.25
-        let ir = int (255.999 * r)
-        let ig = int (255.999 * g)
-        let ib = int (255.999 * b)
-        sprintf "%d %d %d\n" ir ig ib)
+        Color.init (float i / float (ImageWidth - 1)) (float j / float (ImageHeight - 1)) 0.25
+        |> Color.writeColor)
 |> String.concat ""
 |> printfn "%s"
 
