@@ -48,11 +48,9 @@ let main _ =
     sprintf "P3\n%d %d\n255" ImageWidth ImageHeight
     |> printfn "%s"
 
-    seq {
-        for j in List.rev [ 0 .. ImageHeight - 1 ] do
-            for i in [ 0 .. ImageWidth - 1 ] -> i, j
-    }
-    |> Seq.mapi
+    [| for j in List.rev [ 0 .. ImageHeight - 1 ] do
+           for i in [ 0 .. ImageWidth - 1 ] -> i, j |]
+    |> Array.Parallel.mapi
         (fun count (i, j) ->
             if count % ImageWidth = 0 then
                 eprintf "\rScanlines remaining: %d" (ImageHeight - 1 - (count / ImageWidth))
