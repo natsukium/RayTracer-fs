@@ -14,6 +14,6 @@ module Color =
               Color.Y = g
               Color.Z = b } =
             pixelColor * scale
-            |> map ((clamp 0.0 0.999) >> (*) 256.0)
+            |> map (sqrt >> (clamp 0.0 0.999) >> (*) 256.0)
 
         sprintf "%d %d %d\n" (int r) (int g) (int b)

@@ -59,4 +59,14 @@ module Vec3 =
 
     let length (v: Vec3) = v.Length()
 
+    let random min max =
+        init (random min max) (random min max) (random min max)
+
+    let randomInUnitSphere () =
+        Seq.initInfinite (fun _ -> random -1.0 1.0)
+        |> Seq.find (fun p -> lengthSquared p < 1.0)
+
+    let randomUnitVector () = unit (randomInUnitSphere ())
+
+
 type Point3 = Vec3

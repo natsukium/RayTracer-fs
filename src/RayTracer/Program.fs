@@ -1,14 +1,24 @@
 open RayTracer
 
-let rayColor world ray : Color =
-    match Hittable.hit ray 0.0 infinity world with
-    | Some record -> 0.5 * (record.Normal + Color.init 1.0 1.0 1.0)
-    | None ->
-        let unitDirection = Vec3.unit ray.Direction
-        let t = 0.5 * unitDirection.Y + 1.0
+let rec rayColor world depth ray : Color =
+    if depth <= 0 then
+        Color.init 0.0 0.0 0.0
+    else
+        match Hittable.hit ray 0.001 infinity world with
+        | Some record ->
+            let target =
+                record.Point
+                + record.Normal
+                + Vec3.randomUnitVector ()
 
-        (1.0 - t) * Color.init 1.0 1.0 1.0
-        + t * Color.init 0.5 0.7 1.0
+            0.5
+            * rayColor world (depth - 1) (Ray.init record.Point (target - record.Point))
+        | None ->
+            let unitDirection = Vec3.unit ray.Direction
+            let t = 0.5 * unitDirection.Y + 1.0
+
+            (1.0 - t) * Color.init 1.0 1.0 1.0
+            + t * Color.init 0.5 0.7 1.0
 
 let aspectRatio = 16.0 / 9.0
 
@@ -19,6 +29,9 @@ let ImageHeight = float ImageWidth / aspectRatio |> int
 
 [<Literal>]
 let SamplesPerPixel = 100
+
+[<Literal>]
+let MaxDepth = 10
 
 let world =
     [ Sphere.init (Vec3.init 0.0 0.0 -1.0) 0.5
@@ -38,7 +51,9 @@ let render (w, h) =
                 (float h + random 0.0 1.0)
                 / float (ImageHeight - 1)
 
-            acc + (rayColor world <| Camera.getRay u v camera))
+            acc
+            + (rayColor world MaxDepth
+               <| Camera.getRay u v camera))
         (Color.init 0.0 0.0 0.0)
 
     |> Color.writeColor SamplesPerPixel
