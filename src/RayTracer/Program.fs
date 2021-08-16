@@ -31,14 +31,15 @@ let MaxDepth = 10
 
 module Scene =
     let materialGround = Lambertian(Color.init 0.8 0.8 0.0)
-    let materialCenter = Lambertian(Color.init 0.7 0.3 0.3)
-    let materialLeft = Metal(Color.init 0.8 0.8 0.8, 0.3)
-    let materialRight = Metal(Color.init 0.8 0.6 0.2, 1.0)
+    let materialCenter = Lambertian(Color.init 0.1 0.2 0.5)
+    let materialLeft = Dielectric 1.5
+    let materialRight = Metal(Color.init 0.8 0.6 0.2, 0.0)
 
     let world =
         [ Sphere.init (Vec3.init 0.0 -100.5 -1.0) 100.0 materialGround
           Sphere.init (Vec3.init 0.0 0.0 -1.0) 0.5 materialCenter
           Sphere.init (Vec3.init -1.0 0.0 -1.0) 0.5 materialLeft
+          Sphere.init (Vec3.init -1.0 0.0 -1.0) -0.4 materialLeft
           Sphere.init (Vec3.init 1.0 0.0 -1.0) 0.5 materialRight ]
 
 let camera = Camera.primary ()

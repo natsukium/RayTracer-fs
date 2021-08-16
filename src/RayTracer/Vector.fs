@@ -73,3 +73,12 @@ module Vec3 =
         abs v.X < s && abs v.Y < s && abs v.Z < s
 
     let reflect (v: Vec3) (n: Vec3) = v - 2.0 * (dot v n) * n
+
+    let refract (uv: Vec3) (n: Vec3) (ηiOverηt: float) =
+        let cosθ = min (dot -uv n) 1.0
+        let rOutPerp = ηiOverηt * (uv + cosθ * n)
+
+        let rOutParallel =
+            - sqrt(abs (1.0 - lengthSquared rOutPerp)) * n
+
+        rOutPerp + rOutParallel

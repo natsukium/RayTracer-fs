@@ -10,6 +10,7 @@ type Ray = { Origin: Point3; Direction: Vec3 }
 type Material =
     | Lambertian of Albedo: Color
     | Metal of Albedo: Color * Fuzz: float
+    | Dielectric of Ir: float
 
 [<Struct>]
 type Face =
