@@ -17,34 +17,31 @@ let ImageWidth = 400
 
 let ImageHeight = float ImageWidth / aspectRatio |> int
 
+[<Literal>]
+let SamplesPerPixel = 100
+
 let world =
     [ Sphere.init (Vec3.init 0.0 0.0 -1.0) 0.5
       Sphere.init (Vec3.init 0.0 -100.5 -1.0) 100.0 ]
 
-let viewportHeight = 2.0
-let viewportWidth = aspectRatio * viewportHeight
-let focalLength = 1.0
-
-let origin = Vec3.zero ()
-let horizontal = Vec3.init viewportWidth 0.0 0.0
-let vertical = Vec3.init 0.0 viewportHeight 0.0
-
-let lowerLeftCorner =
-    origin
-    - horizontal / 2.0
-    - vertical / 2.0
-    - Vec3.init 0.0 0.0 focalLength
+let camera = Camera.primary ()
 
 let render (w, h) =
-    let u = float w / float (ImageWidth - 1)
-    let v = float h / float (ImageHeight - 1)
+    [ 0 .. SamplesPerPixel - 1 ]
+    |> List.fold
+        (fun acc _ ->
+            let u =
+                (float w + random 0.0 1.0)
+                / float (ImageWidth - 1)
 
-    Ray.init
-        origin
-        (lowerLeftCorner + u * horizontal + v * vertical
-         - origin)
-    |> rayColor world
-    |> Color.writeColor
+            let v =
+                (float h + random 0.0 1.0)
+                / float (ImageHeight - 1)
+
+            acc + (rayColor world <| Camera.getRay u v camera))
+        (Color.init 0.0 0.0 0.0)
+
+    |> Color.writeColor SamplesPerPixel
 
 [<EntryPoint>]
 let main _ =

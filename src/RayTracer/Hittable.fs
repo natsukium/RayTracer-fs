@@ -35,7 +35,7 @@ type Sphere =
 module Sphere =
     let inline init c r = Sphere.Init(c, r)
 
-    let hit ray tMin tMax sphere =
+    let hit (ray: Ray) tMin tMax sphere =
         let oc = ray.Origin - sphere.Center
         let a = Vec3.lengthSquared ray.Direction
         let bHalf = Vec3.dot oc ray.Direction
