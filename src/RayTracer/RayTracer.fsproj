@@ -8,6 +8,7 @@
     <Compile Include="Vector.fs" />
     <Compile Include="Color.fs" />
     <Compile Include="Ray.fs" />
+    <Compile Include="Hittable.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 </Project>

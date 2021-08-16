@@ -1,20 +1,8 @@
 open RayTracer
 
-let hitSphere center radius ray =
-    let oc = ray.Origin - center
-    let a = Vec3.dot ray.Direction ray.Direction
-    let b = 2.0 * Vec3.dot oc ray.Direction
-    let c = Vec3.dot oc oc - radius ** 2.0
-    let discriminant = b ** 2.0 - 4.0 * a * c
-
-    if discriminant > 0.0 then
-        Some(Color.init 1.0 0.0 0.0)
-    else
-        None
-
-let rayColor ray : Color =
-    match hitSphere (Vec3.init 0.0 0.0 -1.0) 0.5 ray with
-    | Some c -> c
+let rayColor world ray : Color =
+    match Hittable.hit ray 0.0 infinity world with
+    | Some record -> 0.5 * (record.Normal + Color.init 1.0 1.0 1.0)
     | None ->
         let unitDirection = Vec3.unit ray.Direction
         let t = 0.5 * unitDirection.Y + 1.0
@@ -28,6 +16,10 @@ let aspectRatio = 16.0 / 9.0
 let ImageWidth = 400
 
 let ImageHeight = float ImageWidth / aspectRatio |> int
+
+let world =
+    [ Sphere.init (Vec3.init 0.0 0.0 -1.0) 0.5
+      Sphere.init (Vec3.init 0.0 -100.5 -1.0) 100.0 ]
 
 let viewportHeight = 2.0
 let viewportWidth = aspectRatio * viewportHeight
@@ -51,7 +43,7 @@ let render (w, h) =
         origin
         (lowerLeftCorner + u * horizontal + v * vertical
          - origin)
-    |> rayColor
+    |> rayColor world
     |> Color.writeColor
 
 [<EntryPoint>]
