@@ -1,22 +1,6 @@
 namespace RayTracer
 
-[<Struct>]
-type Face =
-    | Front
-    | Back
-
-[<Struct>]
-type HitRecord =
-    { Point: Point3
-      Normal: Vec3
-      T: float
-      Face: Face }
-    static member inline Init(point, normal, t, face) =
-        { Point = point
-          Normal = normal
-          T = t
-          Face = face }
-
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module HitRecord =
     let inline init p n t f = HitRecord.Init(p, n, t, f)
 
@@ -26,12 +10,7 @@ module HitRecord =
         else
             -outwardNormal, Back
 
-[<Struct>]
-type Sphere =
-    { Center: Point3
-      Radius: float }
-    static member inline Init(c, r) = { Center = c; Radius = r }
-
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Sphere =
     let inline init c r = Sphere.Init(c, r)
 
@@ -62,8 +41,6 @@ module Sphere =
                     HitRecord.setFaceNormal ray ((point - sphere.Center) / sphere.Radius)
 
                 Some(HitRecord.init point normal t face)
-
-
 
 module Hittable =
     let hit ray tMin tMax (hittables: Sphere list) =

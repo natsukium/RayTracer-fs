@@ -67,6 +67,3 @@ module Vec3 =
         |> Seq.find (fun p -> lengthSquared p < 1.0)
 
     let randomUnitVector () = unit (randomInUnitSphere ())
-
-
-type Point3 = Vec3

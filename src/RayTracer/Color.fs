@@ -1,7 +1,6 @@
 namespace RayTracer
 
-type Color = Vec3
-
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Color =
     let init = Vec3.init
 
