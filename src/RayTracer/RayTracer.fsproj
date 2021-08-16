@@ -11,6 +11,7 @@
     <Compile Include="Color.fs" />
     <Compile Include="Ray.fs" />
     <Compile Include="Camera.fs" />
+    <Compile Include="Materials.fs" />
     <Compile Include="Hittable.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

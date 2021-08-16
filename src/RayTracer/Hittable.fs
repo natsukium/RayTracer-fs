@@ -2,7 +2,7 @@ namespace RayTracer
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module HitRecord =
-    let inline init p n t f = HitRecord.Init(p, n, t, f)
+    let inline init p n t f m = HitRecord.Init(p, n, t, f, m)
 
     let setFaceNormal ray outwardNormal =
         if Vec3.dot ray.Direction outwardNormal < 0.0 then
@@ -12,7 +12,7 @@ module HitRecord =
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Sphere =
-    let inline init c r = Sphere.Init(c, r)
+    let inline init c r m = Sphere.Init(c, r, m)
 
     let hit (ray: Ray) tMin tMax sphere =
         let oc = ray.Origin - sphere.Center
@@ -40,7 +40,7 @@ module Sphere =
                 let normal, face =
                     HitRecord.setFaceNormal ray ((point - sphere.Center) / sphere.Radius)
 
-                Some(HitRecord.init point normal t face)
+                Some(HitRecord.init point normal t face sphere.Material)
 
 module Hittable =
     let hit ray tMin tMax (hittables: Sphere list) =

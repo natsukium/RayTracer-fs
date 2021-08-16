@@ -67,3 +67,9 @@ module Vec3 =
         |> Seq.find (fun p -> lengthSquared p < 1.0)
 
     let randomUnitVector () = unit (randomInUnitSphere ())
+
+    let nearZero (v: Vec3) =
+        let s = 1e-8
+        abs v.X < s && abs v.Y < s && abs v.Z < s
+
+    let reflect (v: Vec3) (n: Vec3) = v - 2.0 * (dot v n) * n

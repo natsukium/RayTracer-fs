@@ -6,13 +6,9 @@ let rec rayColor world depth ray : Color =
     else
         match Hittable.hit ray 0.001 infinity world with
         | Some record ->
-            let target =
-                record.Point
-                + record.Normal
-                + Vec3.randomUnitVector ()
-
-            0.5
-            * rayColor world (depth - 1) (Ray.init record.Point (target - record.Point))
+            match Material.scatter ray record with
+            | Some (scattered, attenuation) -> attenuation * rayColor world (depth - 1) scattered
+            | None -> Color.init 0.0 0.0 0.0
         | None ->
             let unitDirection = Vec3.unit ray.Direction
             let t = 0.5 * unitDirection.Y + 1.0
@@ -33,9 +29,17 @@ let SamplesPerPixel = 100
 [<Literal>]
 let MaxDepth = 10
 
-let world =
-    [ Sphere.init (Vec3.init 0.0 0.0 -1.0) 0.5
-      Sphere.init (Vec3.init 0.0 -100.5 -1.0) 100.0 ]
+module Scene =
+    let materialGround = Lambertian(Color.init 0.8 0.8 0.0)
+    let materialCenter = Lambertian(Color.init 0.7 0.3 0.3)
+    let materialLeft = Metal(Color.init 0.8 0.8 0.8, 0.3)
+    let materialRight = Metal(Color.init 0.8 0.6 0.2, 1.0)
+
+    let world =
+        [ Sphere.init (Vec3.init 0.0 -100.5 -1.0) 100.0 materialGround
+          Sphere.init (Vec3.init 0.0 0.0 -1.0) 0.5 materialCenter
+          Sphere.init (Vec3.init -1.0 0.0 -1.0) 0.5 materialLeft
+          Sphere.init (Vec3.init 1.0 0.0 -1.0) 0.5 materialRight ]
 
 let camera = Camera.primary ()
 
@@ -52,7 +56,7 @@ let render (w, h) =
                 / float (ImageHeight - 1)
 
             acc
-            + (rayColor world MaxDepth
+            + (rayColor Scene.world MaxDepth
                <| Camera.getRay u v camera))
         (Color.init 0.0 0.0 0.0)
 
