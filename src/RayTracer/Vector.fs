@@ -82,3 +82,7 @@ module Vec3 =
             - sqrt(abs (1.0 - lengthSquared rOutPerp)) * n
 
         rOutPerp + rOutParallel
+
+    let randomInUnitDisk () =
+        Seq.initInfinite (fun _ -> init (Utils.random -1.0 1.0) (Utils.random -1.0 1.0) 0.0)
+        |> Seq.find (fun p -> lengthSquared p < 1.0)

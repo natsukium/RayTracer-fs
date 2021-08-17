@@ -42,8 +42,15 @@ module Scene =
           Sphere.init (Vec3.init -1.0 0.0 -1.0) -0.45 materialLeft
           Sphere.init (Vec3.init 1.0 0.0 -1.0) 0.5 materialRight ]
 
-let camera =
-    Camera.init (Vec3.init -2.0 2.0 1.0) (Vec3.init 0.0 0.0 -1.0) (Vec3.init 0.0 1.0 0.0) 20.0 aspectRatio
+module Camera =
+    let lookFrom = Vec3.init 3.0 3.0 2.0
+    let lookAt = Vec3.init 0.0 0.0 -1.0
+    let vUp = Vec3.init 0.0 1.0 0.0
+    let distToFocus = lookFrom - lookAt |> Vec3.length
+    let aperture = 2.0
+
+    let camera =
+        Camera.init lookFrom lookAt vUp 20.0 aspectRatio aperture distToFocus
 
 let render (w, h) =
     [ 0 .. SamplesPerPixel - 1 ]
@@ -59,7 +66,7 @@ let render (w, h) =
 
             acc
             + (rayColor Scene.world MaxDepth
-               <| Camera.getRay u v camera))
+               <| Camera.getRay u v Camera.camera))
         (Color.init 0.0 0.0 0.0)
 
     |> Color.writeColor SamplesPerPixel
