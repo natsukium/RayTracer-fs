@@ -13,3 +13,5 @@ module Utils =
         | x when x < min -> min
         | x when x > max -> max
         | x -> x
+
+    let degreesToRadians degrees = degrees * System.Math.PI / 180.0

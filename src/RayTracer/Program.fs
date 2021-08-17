@@ -39,10 +39,11 @@ module Scene =
         [ Sphere.init (Vec3.init 0.0 -100.5 -1.0) 100.0 materialGround
           Sphere.init (Vec3.init 0.0 0.0 -1.0) 0.5 materialCenter
           Sphere.init (Vec3.init -1.0 0.0 -1.0) 0.5 materialLeft
-          Sphere.init (Vec3.init -1.0 0.0 -1.0) -0.4 materialLeft
+          Sphere.init (Vec3.init -1.0 0.0 -1.0) -0.45 materialLeft
           Sphere.init (Vec3.init 1.0 0.0 -1.0) 0.5 materialRight ]
 
-let camera = Camera.primary ()
+let camera =
+    Camera.init (Vec3.init -2.0 2.0 1.0) (Vec3.init 0.0 0.0 -1.0) (Vec3.init 0.0 1.0 0.0) 20.0 aspectRatio
 
 let render (w, h) =
     [ 0 .. SamplesPerPixel - 1 ]

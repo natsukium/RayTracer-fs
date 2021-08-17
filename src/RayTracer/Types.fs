@@ -44,16 +44,24 @@ type Camera =
       LowerLeftCorner: Point3
       Horizontal: Vec3
       Vertical: Vec3 }
-    static member inline Init(viewportHeight, viewportWidth, focalLength) =
-        let origin = Vec3.init 0.0 0.0 0.0
-        let horizontal = Vec3.init viewportWidth 0.0 0.0
-        let vertical = Vec3.init 0.0 viewportHeight 0.0
+    static member inline Init(lookFrom: Point3, lookAt: Point3, vUp, vfov, aspectRatio) =
+        let θ = degreesToRadians vfov
+        let h = tan (θ / 2.0)
+        let viewportHeight = 2.0 * h
+        let viewportWidth = aspectRatio * viewportHeight
+
+        let w = lookFrom - lookAt |> Vec3.unit
+        let u = Vec3.cross vUp w
+        let v = Vec3.cross w u
+
+        let origin = lookFrom
+        let horizontal = viewportWidth * u
+        let vertical = viewportHeight * v
+
+        let lowerLeftCorner =
+            origin - horizontal / 2.0 - vertical / 2.0 - w
 
         { Origin = origin
-          LowerLeftCorner =
-              origin
-              - horizontal / 2.0
-              - vertical / 2.0
-              - Vec3.init 0.0 0.0 focalLength
+          LowerLeftCorner = lowerLeftCorner
           Horizontal = horizontal
           Vertical = vertical }

@@ -2,20 +2,13 @@ namespace RayTracer
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Camera =
-    let inline init viewportHeight viewportWidth focalLength =
-        Camera.Init(viewportHeight, viewportWidth, focalLength)
+    let inline init (lookFrom: Point3) (lookAt: Point3) (vup: Vec3) vfov aspectRatio =
+        Camera.Init(lookFrom, lookAt, vup, vfov, aspectRatio)
 
-    let inline primary () =
-        let aspectRatio = 16.0 / 9.0
-        let viewportHeight = 2.0
-        let viewportWidth = aspectRatio * viewportHeight
-        let focalLength = 1.0
-        init viewportHeight viewportWidth focalLength
-
-    let getRay (u: float) (v: float) (camera: Camera) =
+    let getRay (s: float) (t: float) (camera: Camera) =
         Ray.init
             camera.Origin
             (camera.LowerLeftCorner
-             + u * camera.Horizontal
-             + v * camera.Vertical
+             + s * camera.Horizontal
+             + t * camera.Vertical
              - camera.Origin)
